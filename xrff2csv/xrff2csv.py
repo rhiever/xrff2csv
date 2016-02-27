@@ -21,6 +21,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import print_function
 import os
+import sys
 import argparse
 
 def xrff2csv(input_filename, output_filename=None, sep='\t'):
@@ -42,7 +43,6 @@ def xrff2csv(input_filename, output_filename=None, sep='\t'):
     None
 
     """
-    out_text = ''
     with open(input_filename, 'r') as in_file:
         headers = []
         values = []
@@ -50,34 +50,46 @@ def xrff2csv(input_filename, output_filename=None, sep='\t'):
             if 'attribute name=' in line:
                 headers.append(line.split('"')[1])
             elif '<body>' in line:
-                out_text += sep.join(headers)
-
+                # Beginning of data entries has been encountered, so output the headers
+                headers = sep.join(headers)
+                if output_filename is not None:
+                    with open(output_filename, 'w') as out_file:
+                        out_file.write(headers)
+                else:
+                    sys.stdout.write(headers)
+                # No need to store the headers in memory any more
+                del headers
             elif '<value>' in line:
                 values.append(line.split('>')[1].split('<')[0])
             elif '</instance>' in line:
-                out_text += os.linesep + sep.join(values)
+                # End of data instance reached, so output it
+                values = os.linesep + sep.join(values)
+                if output_filename is not None:
+                    with open(output_filename, 'a') as out_file:
+                        out_file.write(values)
+                else:
+                    sys.stdout.write(values)
+                # No need to store this data instance in memory any more
                 values = []
 
-    out_text += '\n'
-
-    if output_filename != None:
-        with open(output_filename, 'w') as out_file:
-            out_file.write(out_text)
+    if output_filename is not None:
+        with open(output_filename, 'a') as out_file:
+            out_file.write(os.linesep)
     else:
-        print(out_text)
+        sys.stdout.write(os.linesep)
 
 def main():
     """Main function that is called when xrff2csv is run on the command line"""
     from _version import __version__
 
-    parser = argparse.ArgumentParser(description='A Python tool that converts XRFF files to CSV format.')
+    parser = argparse.ArgumentParser(description='A Python tool that converts XRFF files to CSV format')
 
     parser.add_argument('INPUT_FILENAME', type=str, help='XRFF file to convert')
 
-    parser.add_argument('-o', action='store', dest='output_filename', default=None,
+    parser.add_argument('-o', action='store', dest='OUTPUT_FILENAME', default=None,
                         type=str, help='CSV file to output to')
 
-    parser.add_argument('-sep', action='store', dest='sep', default='\t',
+    parser.add_argument('-sep', action='store', dest='SEP', default='\t',
                         type=str, help='Separator in the CSV file (default: \\t)')
 
     parser.add_argument('--version', action='version',
@@ -85,7 +97,7 @@ def main():
 
     args = parser.parse_args()
 
-    xrff2csv(input_filename=args.INPUT_FILENAME, output_filename=args.output_filename, sep=args.sep)
+    xrff2csv(input_filename=args.INPUT_FILENAME, output_filename=args.OUTPUT_FILENAME, sep=args.SEP)
 
 if __name__ == '__main__':
     main()
