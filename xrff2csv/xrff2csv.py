@@ -68,31 +68,24 @@ def xrff2csv(input_filename, output_filename=None, sep='\t'):
 
 def main():
     """Main function that is called when xrff2csv is run on the command line"""
+    from _version import __version__
+
     parser = argparse.ArgumentParser(description='A Python tool that converts XRFF files to CSV format.')
-    
-    parser.add_argument('-i', action='store', dest='input_filename', default=None,
-                        type=str, help='XRFF file to convert.')
+
+    parser.add_argument('INPUT_FILENAME', type=str, help='XRFF file to convert')
 
     parser.add_argument('-o', action='store', dest='output_filename', default=None,
-                        type=str, help='CSV file to output to.')
+                        type=str, help='CSV file to output to')
 
     parser.add_argument('-sep', action='store', dest='sep', default='\t',
                         type=str, help='Separator in the CSV file (default: \\t)')
-    
-    parser.add_argument('--version', action='store_true', dest='version', default=False, help='Display the current xrff2csv version')
+
+    parser.add_argument('--version', action='version',
+                        version='xrff2csv v{version}'.format(version=__version__))
 
     args = parser.parse_args()
 
-    if args.version:
-        from _version import __version__
-        print('xrff2csv version: {}'.format(__version__))
-        return
-    elif args.input_filename is None:
-        parser.print_help()
-        print('\nError: You must specify an input file name with -i')
-        return
-
-    xrff2csv(input_filename=args.input_filename, output_filename=args.output_filename, sep=args.sep)
+    xrff2csv(input_filename=args.INPUT_FILENAME, output_filename=args.output_filename, sep=args.sep)
 
 if __name__ == '__main__':
     main()
