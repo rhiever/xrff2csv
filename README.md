@@ -21,23 +21,25 @@ xrff2csv can be used on the command line. Use `--help` to see its usage instruct
 ```bash
 xrff2csv --help
 
-usage: xrff2csv [-h] [-i INPUT_FILENAME] [-o OUTPUT_FILENAME] [-sep SEP]
-                [--version]
+usage: xrff2csv [-h] [-o OUTPUT_FILENAME] [-sep SEP] [--version]
+                INPUT_FILENAME
 
-A Python tool that converts XRFF files to CSV format.
+A Python tool that converts XRFF files to CSV format
+
+positional arguments:
+  INPUT_FILENAME      XRFF file to convert
 
 optional arguments:
   -h, --help          show this help message and exit
-  -i INPUT_FILENAME   XRFF file to convert.
-  -o OUTPUT_FILENAME  CSV file to output to.
+  -o OUTPUT_FILENAME  CSV file to output to
   -sep SEP            Separator in the CSV file (default: \t)
-  --version           Display the current xrff2csv version
+  --version           show program's version number and exit
 ```
 
 An example use on the command line would be:
 
 ```bash
-xrff2csv -i zoo.xrff -o zoo.csv -sep ,
+xrff2csv zoo.xrff -o zoo.csv -sep ,
 ```
 
 This command would convert `zoo.xrff` to `zoo.csv` with commas (,) as the separator.
