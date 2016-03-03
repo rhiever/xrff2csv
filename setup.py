@@ -33,6 +33,7 @@ or Twitter: https://twitter.com/randal_olson
 This project is hosted at https://github.com/rhiever/xrff2csv
 ''',
     zip_safe=True,
+    install_requires=['update_checker'],
     classifiers=[
         'Intended Audience :: Developers',
         'Intended Audience :: Information Technology',

@@ -21,19 +21,23 @@ xrff2csv can be used on the command line. Use `--help` to see its usage instruct
 ```bash
 xrff2csv --help
 
-usage: xrff2csv [-h] [-o OUTPUT_FILENAME] [-sep SEP] [--version]
+usage: xrff2csv [-h] [-o OUTPUT_FILENAME] [-sep SEP]
+                [--ignore-update-check] [--version]
                 INPUT_FILENAME
 
 A Python tool that converts XRFF files to CSV format
 
 positional arguments:
-  INPUT_FILENAME      XRFF file to convert
+  INPUT_FILENAME        XRFF file to convert
 
 optional arguments:
-  -h, --help          show this help message and exit
-  -o OUTPUT_FILENAME  CSV file to output to
-  -sep SEP            Separator in the CSV file (default: \t)
-  --version           show program's version number and exit
+  -h, --help            show this help message and exit
+  -o OUTPUT_FILENAME    CSV file to output to
+  -sep SEP              Separator in the CSV file (default: \t)
+  --ignore-update-check
+                        Do not check for the latest version of xrff2csv
+                        (default: False)
+  --version             show program's version number and exit
 ```
 
 An example use on the command line would be:

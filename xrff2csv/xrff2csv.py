@@ -23,8 +23,13 @@ from __future__ import print_function
 import os
 import sys
 import argparse
+from update_checker import update_check
 
-def xrff2csv(input_filename, output_filename=None, sep='\t'):
+from ._version import __version__
+
+update_checked = False
+
+def xrff2csv(input_filename, output_filename=None, sep='\t', ignore_update_check=False):
     """Converts the provided XRFF file to CSV format
 
     If `output_filename` is not specified, the function will print the result
@@ -37,12 +42,21 @@ def xrff2csv(input_filename, output_filename=None, sep='\t'):
         Name of the CSV file to output to (default: None)
     sep: str
         String to use as the separator in the CSV file (default: \t)
+    ignore_update_check: bool
+        Do not check for the latest version of xrff2csv
 
     Returns
     ----------
     None
 
     """
+    global update_checked
+    if ignore_update_check:
+        update_checked = True
+
+    if not update_checked:
+        update_check('xrff2csv', __version__)
+        update_checked = True
     with open(input_filename, 'r') as in_file:
         headers = []
         values = []
@@ -80,8 +94,6 @@ def xrff2csv(input_filename, output_filename=None, sep='\t'):
 
 def main():
     """Main function that is called when xrff2csv is run on the command line"""
-    from _version import __version__
-
     parser = argparse.ArgumentParser(description='A Python tool that converts XRFF files to CSV format')
 
     parser.add_argument('INPUT_FILENAME', type=str, help='XRFF file to convert')
@@ -92,12 +104,16 @@ def main():
     parser.add_argument('-sep', action='store', dest='SEP', default='\t',
                         type=str, help='Separator in the CSV file (default: \\t)')
 
+    parser.add_argument('--ignore-update-check', action='store_true', dest='IGNORE_UPDATE_CHECK', default=False,
+                        help='Do not check for the latest version of xrff2csv (default: False)')
+
     parser.add_argument('--version', action='version',
                         version='xrff2csv v{version}'.format(version=__version__))
 
     args = parser.parse_args()
 
-    xrff2csv(input_filename=args.INPUT_FILENAME, output_filename=args.OUTPUT_FILENAME, sep=args.SEP)
+    xrff2csv(input_filename=args.INPUT_FILENAME, output_filename=args.OUTPUT_FILENAME,
+             sep=args.SEP, ignore_update_check=args.IGNORE_UPDATE_CHECK)
 
 if __name__ == '__main__':
     main()
